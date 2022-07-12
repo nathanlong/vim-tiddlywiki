@@ -25,7 +25,7 @@ endfunction
 function! s:UpdateModifiedTime()
   let save_cursor = getcurpos()
   silent execute "0,7s/\\vmodified.*$/modified: " . TiddlyWikiTime() . "/"
-  silent execute "0,7s/\\vmodifier.*$/modifier: " . s:TiddlyWikiUser() . "/"
+  " silent execute "0,7s/\\vmodifier.*$/modifier: " . s:TiddlyWikiUser() . "/"
   call setpos('.', save_cursor)
 endfunction
 
@@ -55,7 +55,7 @@ function! s:InitializeTemplate(tags)
   call append(0, "created: " . timestamp)
   call append(1, "creator: " . s:TiddlyWikiUser())
   call append(2, "modified: " . timestamp)
-  call append(3, "modifier: " . s:TiddlyWikiUser())
+  " call append(3, "modifier: " . s:TiddlyWikiUser())
   " Title defaults to filename without extension
   call append(4, "title: " . expand('%:t:r')) 
   call append(5, "tags: " . join(a:tags, ' '))
@@ -140,6 +140,14 @@ function! s:InsertLink(name)
 endfunction
 
 
+function! s:JournalTags()
+  if exists("g:tiddlywiki_journal_tags")
+    return split(g:tiddlywiki_journal_tags)
+  else
+    return ['Journal']
+  endif
+endfunction
+
 
 if exists("g:tiddlywiki_autoupdate")
   augroup tiddlywiki
@@ -148,13 +156,10 @@ if exists("g:tiddlywiki_autoupdate")
 endif
 
 
-
-
-
 " Define commands, allowing the user to define custom mappings
 command! -nargs=0 TiddlyWikiUpdateMetadata call <SID>UpdateModifiedTime()
 command! -nargs=0 TiddlyWikiInitializeTemplate call <SID>InitializeTemplate([])
-command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(['Journal'])
+command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(JournalTags())
 command! -nargs=0 TiddlyWikiOpenLink execute <sid>OpenLinkUnderCursor()
 command! -complete=customlist,tiddlywiki#CompleteTiddlerName
        \ -nargs=? TiddlyWikiInsertLink call <SID>InsertLink('<args>')
