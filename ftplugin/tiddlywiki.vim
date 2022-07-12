@@ -201,7 +201,7 @@ endif
 " Define commands, allowing the user to define custom mappings
 command! -nargs=0 TiddlyWikiUpdateMetadata call <SID>UpdateHeaders([])
 command! -nargs=0 TiddlyWikiInitializeTemplate call <SID>InitializeTemplate([])
-command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(JournalTags())
+command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(call <SID>JournalTags())
 command! -nargs=0 TiddlyWikiOpenLink execute <sid>OpenLinkUnderCursor()
 command! -complete=customlist,tiddlywiki#CompleteTiddlerName
        \ -nargs=? TiddlyWikiInsertLink call <SID>InsertLink('<args>')
