@@ -53,14 +53,14 @@ endfunction
 function! s:InitializeTemplate(tags)
   let timestamp = TiddlyWikiTime()
   call append(0, "created: " . timestamp)
-  call append(1, "creator: " . s:TiddlyWikiUser())
-  call append(2, "modified: " . timestamp)
+  " call append(1, "creator: " . s:TiddlyWikiUser())
+  call append(1, "modified: " . timestamp)
   " call append(3, "modifier: " . s:TiddlyWikiUser())
   " Title defaults to filename without extension
-  call append(4, "title: " . expand('%:t:r')) 
-  call append(5, "tags: " . join(a:tags, ' '))
-  call append(6, "type: text/vnd.tiddlywiki")
-  call append(7, "")
+  call append(2, "tags: " . join(a:tags, ' '))
+  call append(3, "title: " . expand('%:t:r')) 
+  call append(4, "type: text/vnd.tiddlywiki")
+  call append(5, "")
 endfunction
 
 
@@ -159,7 +159,7 @@ endif
 " Define commands, allowing the user to define custom mappings
 command! -nargs=0 TiddlyWikiUpdateMetadata call <SID>UpdateModifiedTime()
 command! -nargs=0 TiddlyWikiInitializeTemplate call <SID>InitializeTemplate([])
-command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(call <SID>JournalTags())
+command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(<SID>JournalTags())
 command! -nargs=0 TiddlyWikiOpenLink execute <sid>OpenLinkUnderCursor()
 command! -complete=customlist,tiddlywiki#CompleteTiddlerName
        \ -nargs=? TiddlyWikiInsertLink call <SID>InsertLink('<args>')
