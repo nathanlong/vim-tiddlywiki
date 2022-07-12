@@ -21,17 +21,6 @@ function! TiddlyWikiTime()
   return substitute(l:ts, '\v[^0-9]', '', 'g')
 endfunction
 
-<<<<<<< HEAD
-=======
-" Update the 'modified:' and 'modifier' values in the header
-function! s:UpdateModifiedTime()
-  let save_cursor = getcurpos()
-  silent execute "0,7s/\\vmodified.*$/modified: " . TiddlyWikiTime() . "/"
-  " silent execute "0,7s/\\vmodifier.*$/modifier: " . s:TiddlyWikiUser() . "/"
-  call setpos('.', save_cursor)
-endfunction
-
->>>>>>> 4bbfabe (temporarily remove modifer field (i dont use it) and add (possible) support for journal tags)
 " Get the username to use as 'creator' and/or 'modifier'
 " Uses the 'g:tiddlywiki_author' variable if present or the system username
 " otherwise
@@ -83,18 +72,11 @@ endfunction
 function! s:UpdateHeaders(tags)
   let save_cursor = getcurpos()
   let timestamp = TiddlyWikiTime()
-<<<<<<< HEAD
 
   call s:SetHeader('created', timestamp, 0)
   call s:SetHeader('creator', s:TiddlyWikiUser(), 0)
   call s:SetHeader('modified', timestamp, 1)
   call s:SetHeader('modifier', s:TiddlyWikiUser(), 1)
-=======
-  call append(0, "created: " . timestamp)
-  call append(1, "creator: " . s:TiddlyWikiUser())
-  call append(2, "modified: " . timestamp)
-  " call append(3, "modifier: " . s:TiddlyWikiUser())
->>>>>>> 4bbfabe (temporarily remove modifer field (i dont use it) and add (possible) support for journal tags)
   " Title defaults to filename without extension
   call s:SetHeader('title', expand('%:t:r'), 0)
   call s:SetHeader('tags', join(a:tags, ' '), 0)
@@ -201,7 +183,7 @@ endif
 " Define commands, allowing the user to define custom mappings
 command! -nargs=0 TiddlyWikiUpdateMetadata call <SID>UpdateHeaders([])
 command! -nargs=0 TiddlyWikiInitializeTemplate call <SID>InitializeTemplate([])
-command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(call <SID>JournalTags())
+command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(JournalTags())
 command! -nargs=0 TiddlyWikiOpenLink execute <sid>OpenLinkUnderCursor()
 command! -complete=customlist,tiddlywiki#CompleteTiddlerName
        \ -nargs=? TiddlyWikiInsertLink call <SID>InsertLink('<args>')

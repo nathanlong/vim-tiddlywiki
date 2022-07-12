@@ -1,10 +1,5 @@
-This is a fork of http://www.vim.org/scripts/script.php?script_id=2705
+This is a fork of https://github.com/sukima/vim-tiddlywiki
 
-For people who like the TiddlyWiki formatting syntax.
-
-http://tiddlywiki.org/wiki/TiddlyWiki_Markup
-
-It has since been highly customized and updated.
 
 This plugin provides syntax highlighting for tiddlywiki files (`*.tid`) as well
 as some helpers for editing TiddlyWiki files. It is probably best used in 
@@ -12,6 +7,13 @@ conjunction with [TiddlyWiki Bob](https://github.com/OokTech/TW5-Bob), since it
 is designed to smoothly handle tiddlers being changed both via TiddlyWiki as
 well as directly on the file system.
 
+### Changes
+
+* Removed `created` and `modifier` fields on tiddler initialization
+** A single-user wiki does not set these fields, so let's stay consistent
+* Added support for setting journal tags through a global variable
+** Allow you to seed it the same as what's in the Tiddlywiki preferences if
+you have a tagging archive strategy
 
 # Usage
 
@@ -85,5 +87,8 @@ let g:tiddlywiki_no_mappings=1
 " Automatically update tiddler metadata ('modified' timestamp, 'modifier' 
 " username) on write
 let g:tiddlywiki_autoupdate=1
+
+" Set default tags for journal entries with a space separated string
+let g:tiddlywiki_journal_tags = "Journal J2022"
 ```
 
