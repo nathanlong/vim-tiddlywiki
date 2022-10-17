@@ -21,14 +21,6 @@ function! TiddlyWikiTime()
   return substitute(l:ts, '\v[^0-9]', '', 'g')
 endfunction
 
-" Update the 'modified:' and 'modifier' values in the header
-function! s:UpdateModifiedTime()
-  let save_cursor = getcurpos()
-  silent execute "0,7s/\\vmodified.*$/modified: " . TiddlyWikiTime() . "/"
-  " silent execute "0,7s/\\vmodifier.*$/modifier: " . s:TiddlyWikiUser() . "/"
-  call setpos('.', save_cursor)
-endfunction
-
 " Get the username to use as 'creator' and/or 'modifier'
 " Uses the 'g:tiddlywiki_author' variable if present or the system username
 " otherwise
@@ -46,21 +38,53 @@ endfunction
 
 function! s:AutoUpdateModifiedTime()
   if &modified
-    call <SID>UpdateModifiedTime()
+    call <SID>UpdateHeaders([])
   endif
 endfunction
 
+function! s:SetHeader(key, value, replace)
+  let save_cursor = getcurpos()
+  normal! gg0
+
+  let key_pattern = '\v^' . a:key . ': '
+  let replacement = a:key . ': ' . a:value
+  if search(key_pattern, 'c', 7) 
+    if a:replace
+      silent execute 's/' . key_pattern . '.*/' . replacement . "/"
+    endif
+  else
+    call append(0, replacement)
+  endif
+
+  call setpos('.', save_cursor)
+endfunction
+
 function! s:InitializeTemplate(tags)
+  call s:UpdateHeaders(a:tags)
+
+  if line('$') <= 8
+    call append(7, "")
+  endif
+
+  normal! G
+endfunction
+
+function! s:UpdateHeaders(tags)
+  let save_cursor = getcurpos()
   let timestamp = TiddlyWikiTime()
-  call append(0, "created: " . timestamp)
-  " call append(1, "creator: " . s:TiddlyWikiUser())
-  call append(1, "modified: " . timestamp)
-  " call append(3, "modifier: " . s:TiddlyWikiUser())
+
+  call s:SetHeader('created', timestamp, 0)
+  " call s:SetHeader('creator', s:TiddlyWikiUser(), 0)
+  call s:SetHeader('modified', timestamp, 1)
+  " call s:SetHeader('modifier', s:TiddlyWikiUser(), 1)
   " Title defaults to filename without extension
-  call append(2, "tags: " . join(a:tags, ' '))
-  call append(3, "title: " . expand('%:t:r')) 
-  call append(4, "type: text/vnd.tiddlywiki")
-  call append(5, "")
+  call s:SetHeader('title', expand('%:t:r'), 0)
+  call s:SetHeader('tags', join(a:tags, ' '), 0)
+  call s:SetHeader('type', 'text/vnd.tiddlywiki', 0)
+
+  silent execute "1,7sort"
+  "silent execute "normal! \<esc>"
+  call setpos('.', save_cursor)
 endfunction
 
 
@@ -157,7 +181,7 @@ endif
 
 
 " Define commands, allowing the user to define custom mappings
-command! -nargs=0 TiddlyWikiUpdateMetadata call <SID>UpdateModifiedTime()
+command! -nargs=0 TiddlyWikiUpdateMetadata call <SID>UpdateHeaders([])
 command! -nargs=0 TiddlyWikiInitializeTemplate call <SID>InitializeTemplate([])
 command! -nargs=0 TiddlyWikiInitializeJournal call <SID>InitializeTemplate(<SID>JournalTags())
 command! -nargs=0 TiddlyWikiOpenLink execute <sid>OpenLinkUnderCursor()
