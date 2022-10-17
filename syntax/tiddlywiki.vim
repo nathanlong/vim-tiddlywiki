@@ -17,11 +17,8 @@ endif
 
 setlocal isident+=-
 
-"Get html syntax for html titles
-runtime! syntax/html.vim
-
 """ Patterns
-syn spell toplevesyn region 
+syn spell toplevel
 
 " Rules
 syn match twRulesPragma /^\s*\\rules.*$/ contains=twRulesIntent,twRulesValue
@@ -36,6 +33,20 @@ syn keyword twRulesValue filteredtranscludeblock heading horizrule html list con
 syn keyword twRulesValue macrocallblock quoteblock styleblock table contained
 syn keyword twRulesValue transcludeblock typedblock contained
 
+" Line matching yoinked from markdown syntax, needed for headings
+" This match is super greedy, so set at top so ithers can override later, but:
+" TODO: see if this can be simplified
+syn match twLineStart "^[<@]\@!" nextgroup=@twBlock
+syn cluster twBlock contains=twHeadingH1,twHeadingH2,twHeadingH3,twHeadingH4,twHeadingH5,twHeadingH6
+
+" Heading
+syn region twHeadingH1 matchgroup=twH1Delimiter start=" \{,3}!\s"      end="#*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH2 matchgroup=twH2Delimiter start=" \{,3}!!\s"     end="#*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH3 matchgroup=twH3Delimiter start=" \{,3}!!!\s"    end="#*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH4 matchgroup=twH4Delimiter start=" \{,3}!!!!\s"   end="#*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH5 matchgroup=twH5Delimiter start=" \{,3}!!!!!\s"  end="#*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH6 matchgroup=twH6Delimiter start=" \{,3}!!!!!!\s" end="#*\s*$" keepend oneline contains=@Spell contained
+
 " Macros
 syn region twMacro start=/<<\i\+/ end=/>>/ contains=twStringTriple,twStringDouble,twStringSingle
 syn match twMacroDefineStart /^\s*\\define\s\+\i\+(\i*)/ contains=twMacroDefineName
@@ -43,10 +54,6 @@ syn match twMacroDefineName /\i\+(\i*)/ contained contains=twMacroDefineArg
 syn region twMacroDefineArg start=/(/ms=s+1 end=/)/me=e-1 contained
 syn match twMacroDefineEnd /^\s*\\end/
 syn match twVariable /\$(\=\i\+)\=\$/
-
-" Header Fields
-syn match twFieldsLine /^\i\+:\s\+.*$/ contains=twFieldsKey
-syn match twFieldsKey /^\i\+:/ contained
 
 " Widgets
 syn region twWidgetStartTag start=/<\$\=\i\+/ end=/>/ contains=twWidgetAttr,twMacro,twTransclude,twStringTriple,twStringDouble,twStringSingle
@@ -82,14 +89,10 @@ syn match twList /^[\*#]\+/
 " Comment
 syn region twComment start=/<!--/ end=/-->/ contains=@Spell
 
-" Heading
-" syn match twHeading /^!\+\s*.*$/ contains=@Spell
-syn region twHeadingH1 matchgroup=twH1Delimiter start=" \{,3}!\s"      end="!*\s*$" keepend oneline contains=@Spell contained
-syn region twHeadingH2 matchgroup=twH2Delimiter start=" \{,3}!!\s"     end="!*\s*$" keepend oneline contains=@Spell contained
-syn region twHeadingH3 matchgroup=twH3Delimiter start=" \{,3}!!!\s"    end="!*\s*$" keepend oneline contains=@Spell contained
-syn region twHeadingH4 matchgroup=twH4Delimiter start=" \{,3}!!!!\s"   end="!*\s*$" keepend oneline contains=@Spell contained
-syn region twHeadingH5 matchgroup=twH5Delimiter start=" \{,3}!!!!!\s"  end="!*\s*$" keepend oneline contains=@Spell contained
-syn region twHeadingH6 matchgroup=twH6Delimiter start=" \{,3}!!!!!!\s" end="!*\s*$" keepend oneline contains=@Spell contained
+
+" Header Fields
+syn match twFieldsLine /^\i\+:\s\+.*$/ contains=twFieldsKey
+syn match twFieldsKey /^\i\+:/ contained
 
 " Emphasis
 syn match twItalic /\/\/.\{-}\/\// contains=@Spell
@@ -111,23 +114,28 @@ syn cluster twFormatting add=twCode,twCodeblockTag,twComment
 
 """ Highlighting
 
+" Basic Formatting
 hi def twItalic term=italic cterm=italic gui=italic
 hi def twBold term=bold cterm=bold gui=bold
 
+" Rainbow headers! (requires TokyoNight, but hey, this is my personal setup yo)
+hi def twHeadingH1 guifg=#f7768e term=bold cterm=bold gui=bold
+hi def twHeadingH2 guifg=#e0af68 term=bold cterm=bold gui=bold
+hi def twHeadingH3 guifg=#9ece6a term=bold cterm=bold gui=bold
+hi def twHeadingH4 guifg=#1abc9c term=bold cterm=bold gui=bold
+hi def twHeadingH5 guifg=#7aa2f7 term=bold cterm=bold gui=bold
+hi def twHeadingH6 guifg=#bb9af7 term=bold cterm=bold gui=bold
 
-hi def link twHeadingH1 htmlH1
-hi def link twHeadingH2 htmlH2
-hi def link twHeadingH3 htmlH3
-hi def link twHeadingH4 htmlH4
-hi def link twHeadingH5 htmlH5
-hi def link twHeadingH6 htmlH6
+" With colorful delimiters!
 hi def link twH1Delimiter twHeadingDelimiter
 hi def link twH2Delimiter twHeadingDelimiter
 hi def link twH3Delimiter twHeadingDelimiter
 hi def link twH4Delimiter twHeadingDelimiter
 hi def link twH5Delimiter twHeadingDelimiter
 hi def link twH6Delimiter twHeadingDelimiter
-hi def link twHeadingDelimiter Delimiter
+hi def link twHeadingDelimiter Float
+
+" Other stuff
 hi def link twUnderline Underlined
 hi def link twStrikethrough Ignore
 hi def link twHighlight Todo
@@ -135,7 +143,7 @@ hi def link twNoFormatting Constant
 hi def link twCodeblockTag Constant
 hi def link twCode Constant
 hi def link twComment Comment
-hi def link twList Structure
+hi def link twList Statement
 hi def link twDefinitionListTerm Identifier
 hi def link twDefinitionListDescription String
 hi def link twBlockquote Repeat

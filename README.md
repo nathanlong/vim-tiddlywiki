@@ -1,21 +1,15 @@
 This is a fork of https://github.com/sukima/vim-tiddlywiki
 
+Go read that README if you want more info on the base.
 
-This plugin provides syntax highlighting for tiddlywiki files (`*.tid`) as well
-as some helpers for editing TiddlyWiki files. It is probably best used in 
-conjunction with [TiddlyWiki Bob](https://github.com/OokTech/TW5-Bob), since it 
-is designed to smoothly handle tiddlers being changed both via TiddlyWiki as
-well as directly on the file system.
-
-### Changes
+### Changes in fork:
 
 * Removed `created` and `modifier` fields on tiddler initialization
 ** A single-user wiki does not set these fields, so let's stay consistent
 * Added support for setting journal tags through a global variable
-** Allow you to seed it the same as what's in the Tiddlywiki preferences if
-you have a tagging archive strategy
-
-# Usage
+** Allow you to seed it the same as what's in the Tiddlywiki preferences if you have a tagging archive strategy
+* 🌈 RAINBOW HEADERS (but you need the TokyoNight theme currently, because... stuff)
+* Slightly better colors for dark theme usage
 
 
 ## Provided Commands
@@ -41,14 +35,12 @@ The `TiddlyWikiEditTiddler` and `TiddlyWikiInsertLink` commands have completion 
 In addition, if you call them without arguments and have [fzf](https://github.com/junegunn/fzf)
 installed, you will get extra fancy completion.
 
-
 ## Completion
 
 The plugin contains a first user completion function that can be invoked in 
 insert mode via `<C-X><C-U>`. It can complete WikiWords and bracket `[[Links]]`
 (as long as both leading brackets are there). It is still rather rudimentary,
 but should still make things a lot easier.
-
 
 ## Default Mappings
 
@@ -62,7 +54,6 @@ nmap <Leader>tJ :vsplit<cr>:TiddlyWikiEditJournal<Cr>
 nmap <Leader>to :TiddlyWikiOpenLink<Cr>
 nmap <Leader>tl :TiddlyWikiInsertLink<Space>
 ```
-
 
 ## Configuration
 
@@ -91,4 +82,3 @@ let g:tiddlywiki_autoupdate=1
 " Set default tags for journal entries with a space separated string
 let g:tiddlywiki_journal_tags = "Journal J2022"
 ```
-
