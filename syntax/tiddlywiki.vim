@@ -17,8 +17,11 @@ endif
 
 setlocal isident+=-
 
+"Get html syntax for html titles
+runtime! syntax/html.vim
+
 """ Patterns
-syn spell toplevel
+syn spell toplevesyn region 
 
 " Rules
 syn match twRulesPragma /^\s*\\rules.*$/ contains=twRulesIntent,twRulesValue
@@ -80,7 +83,13 @@ syn match twList /^[\*#]\+/
 syn region twComment start=/<!--/ end=/-->/ contains=@Spell
 
 " Heading
-syn match twHeading /^!\+\s*.*$/ contains=@Spell
+" syn match twHeading /^!\+\s*.*$/ contains=@Spell
+syn region twHeadingH1 matchgroup=twH1Delimiter start=" \{,3}!\s"      end="!*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH2 matchgroup=twH2Delimiter start=" \{,3}!!\s"     end="!*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH3 matchgroup=twH3Delimiter start=" \{,3}!!!\s"    end="!*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH4 matchgroup=twH4Delimiter start=" \{,3}!!!!\s"   end="!*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH5 matchgroup=twH5Delimiter start=" \{,3}!!!!!\s"  end="!*\s*$" keepend oneline contains=@Spell contained
+syn region twHeadingH6 matchgroup=twH6Delimiter start=" \{,3}!!!!!!\s" end="!*\s*$" keepend oneline contains=@Spell contained
 
 " Emphasis
 syn match twItalic /\/\/.\{-}\/\// contains=@Spell
@@ -105,13 +114,26 @@ syn cluster twFormatting add=twCode,twCodeblockTag,twComment
 hi def twItalic term=italic cterm=italic gui=italic
 hi def twBold term=bold cterm=bold gui=bold
 
+
+hi def link twHeadingH1 htmlH1
+hi def link twHeadingH2 htmlH2
+hi def link twHeadingH3 htmlH3
+hi def link twHeadingH4 htmlH4
+hi def link twHeadingH5 htmlH5
+hi def link twHeadingH6 htmlH6
+hi def link twH1Delimiter twHeadingDelimiter
+hi def link twH2Delimiter twHeadingDelimiter
+hi def link twH3Delimiter twHeadingDelimiter
+hi def link twH4Delimiter twHeadingDelimiter
+hi def link twH5Delimiter twHeadingDelimiter
+hi def link twH6Delimiter twHeadingDelimiter
+hi def link twHeadingDelimiter Delimiter
 hi def link twUnderline Underlined
 hi def link twStrikethrough Ignore
 hi def link twHighlight Todo
 hi def link twNoFormatting Constant
 hi def link twCodeblockTag Constant
 hi def link twCode Constant
-hi def link twHeading Title
 hi def link twComment Comment
 hi def link twList Structure
 hi def link twDefinitionListTerm Identifier
