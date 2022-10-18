@@ -82,7 +82,9 @@ function! s:UpdateHeaders(tags)
   call s:SetHeader('tags', join(a:tags, ' '), 0)
   call s:SetHeader('type', 'text/vnd.tiddlywiki', 0)
 
-  silent execute "1,7sort"
+  " silent execute "1,7sort"
+  " I only use 5 fields, not 7, so it borks on new tiddlers/save - NL
+  silent execute "1,5sort"
   "silent execute "normal! \<esc>"
   call setpos('.', save_cursor)
 endfunction
