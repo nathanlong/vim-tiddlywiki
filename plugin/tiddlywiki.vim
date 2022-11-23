@@ -50,7 +50,7 @@ endfunction
 " Define commands, allowing the user to define custom mappings
 command! -complete=customlist,tiddlywiki#CompleteTiddlerName
        \ -nargs=? TiddlyWikiEditTiddler call <SID>EditOrCreate('<args>')
-command! -nargs=? TiddlyWikiEditJournal call <SID>EditOrCreateJournal() 
+command! -nargs=? TiddlyWikiEditJournal call <SID>EditOrCreateJournal('<args>') 
 
 " Define some default mappings unless disabled
 if !exists("g:tiddlywiki_no_mappings")
