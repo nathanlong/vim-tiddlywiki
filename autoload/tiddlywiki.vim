@@ -35,14 +35,14 @@ endfunction
 
 
 " Get the name for the journal tiddler for right now
-function! tiddlywiki#GetJournalTiddlerName()
+function! tiddlywiki#GetJournalTiddlerName(dateMod)
   if exists('g:tiddlywiki_journal_format')
     let fmt = g:tiddlywiki_journal_format
   else
     let fmt = '%F'
   endif
 
-  return trim(system("date +'" . fmt . "'"))
+  return trim(system("date -v" . a:dateMod . " +'" . fmt . "'"))
 endfunction
 
 

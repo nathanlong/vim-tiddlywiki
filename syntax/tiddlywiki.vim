@@ -34,8 +34,8 @@ syn keyword twRulesValue macrocallblock quoteblock styleblock table contained
 syn keyword twRulesValue transcludeblock typedblock contained
 
 " Line matching yoinked from markdown syntax, needed for headings
-" This match is super greedy, so set at top so ithers can override later, but:
-" TODO: see if this can be simplified
+" This match is super greedy, so set at top so it can be overriden later, but:
+" TODO: Figure out why header highlighting is inconsistent (requires refresh)
 syn match twLineStart "^[<@]\@!" nextgroup=@twBlock
 syn cluster twBlock contains=twHeadingH1,twHeadingH2,twHeadingH3,twHeadingH4,twHeadingH5,twHeadingH6
 

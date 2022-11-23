@@ -26,15 +26,16 @@ function! s:EditOrCreate(name)
   endif
 endfunction
 
-
+" TODO: allow empty argument for manual journal commands
+"
 " Open the journal tiddler for today. If it doesn't exist, create and
 " initialize it
-function! s:EditOrCreateJournal()
+function! s:EditOrCreateJournal(dateMod)
   if tiddlywiki#TiddlyWikiDir() == ''
     return
   endif
 
-  let name = tiddlywiki#GetJournalTiddlerName()
+  let name = tiddlywiki#GetJournalTiddlerName(a:dateMod)
   let fqn = tiddlywiki#TiddlyWikiDir() . name . '.tid'
   execute 'edit ' . fqn
 
@@ -49,14 +50,16 @@ endfunction
 " Define commands, allowing the user to define custom mappings
 command! -complete=customlist,tiddlywiki#CompleteTiddlerName
        \ -nargs=? TiddlyWikiEditTiddler call <SID>EditOrCreate('<args>')
-command! -nargs=0 TiddlyWikiEditJournal call <SID>EditOrCreateJournal() 
+command! -nargs=? TiddlyWikiEditJournal call <SID>EditOrCreateJournal() 
 
 " Define some default mappings unless disabled
 if !exists("g:tiddlywiki_no_mappings")
   nmap <Leader>te :TiddlyWikiEditTiddler<Space>
   nmap <Leader>tE :vsplit<cr>:TiddlyWikiEditTiddler<Space>
-  nmap <Leader>tj :TiddlyWikiEditJournal<Cr>
-  nmap <Leader>tJ :vsplit<cr>:TiddlyWikiEditJournal<Cr>
+  nmap <Leader>tj :TiddlyWikiEditJournal<space>+0d<Cr>
+  nmap <Leader>tJ :vsplit<cr>:TiddlyWikiEditJournal<space>+0d<Cr>
+  nmap <Leader>tk :TiddlyWikiEditJournal<space>+1d<Cr>
+  nmap <Leader>tK :TiddlyWikiEditJournal<space>-1d<Cr>
 endif
 
 
